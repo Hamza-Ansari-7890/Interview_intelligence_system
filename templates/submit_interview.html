@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Interview - Interview Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .question-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+    }
+
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+        display: inline-block;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+
+    .btn-secondary:hover {
+        background: #7f8c8d;
+    }
+
+    .btn-remove {
+        background: #e74c3c;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-remove:hover {
+        background: #c0392b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>📝 Submit Interview Details</h2>
+
+<div class="card">
+    <form id="interviewForm">
+        <div class="form-section">
+            <h3>Interview Information</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="company">Company Name *</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+                <div>
+                    <label for="role">Job Role *</label>
+                    <input type="text" id="role" name="role" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="interview_round">Interview Round *</label>
+                    <select id="interview_round" name="interview_round" required>
+                        <option value="">Select Round</option>
+                        <option value="Online Assessment">Online Assessment</option>
+                        <option value="Technical Round 1">Technical Round 1</option>
+                        <option value="Technical Round 2">Technical Round 2</option>
+                        <option value="HR Round">HR Round</option>
+                        <option value="Manager Round">Manager Round</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="mode">Interview Mode *</label>
+                    <select id="mode" name="mode" required>
+                        <option value="">Select Mode</option>
+                        <option value="Online">Online</option>
+                        <option value="In-Person">In-Person</option>
+                        <option value="Phone">Phone</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label for="experience_level">Experience Level *</label>
+                <select id="experience_level" name="experience_level" required>
+                    <option value="">Select Level</option>
+                    <option value="Fresher">Fresher</option>
+                    <option value="Junior (1-3 years)">Junior (1-3 years)</option>
+                    <option value="Mid-level (3-5 years)">Mid-level (3-5 years)</option>
+                    <option value="Senior (5+ years)">Senior (5+ years)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Questions Asked</h3>
+            <div id="questionsContainer">
+                <div class="question-item">
+                    <label for="question-0">Question *</label>
+                    <textarea name="questions" class="question-input" placeholder="Enter the question asked" required
+                        style="margin-bottom: 0.5rem;"></textarea>
+
+
+                    <label for="topic-0">Topic *</label>
+                    <select id="topic-0" name="topics" required>
+                        <option value="">Select Topic</option>
+                        <option value="SQL">SQL</option>
+                        <option value="Python">Python</option>
+                        <option value="PowerBI">PowerBI</option>
+                        <option value="Excel">Excel</option>
+                        <option value="Others">Others</option>
+                    </select>
+                    <label for="answered-0">Did You Answer? *</label>
+                    <select id="answered-0" name="answered" required>
+                        <option value="">Select Answer Status</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <button type="button" class="btn-remove" onclick="removeQuestion(this)">Remove</button>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                <button type="button" class="btn btn-secondary" id="addQuestionBtn">+ Add Question</button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="font-size: 1.1rem; padding: 1rem 2rem;">Submit
+            Interview</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let questionCount = 1;
+
+    function addQuestion() {
+        const container = document.getElementById('questionsContainer');
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-item';
+        questionDiv.innerHTML = `
+            <label>Question *</label>
+            <textarea name="questions" class="question-input" placeholder="Enter the question asked" required style="margin-bottom: 0.5rem;"></textarea>
+            
+            <label style="margin-top: 0.5rem;">Topic *</label>
+            <select name="topics" required>
+                <option value="">Select Topic</option>
+                <option value="SQL">SQL</option>
+                <option value="Python">Python</option>
+                <option value="PowerBI">PowerBI</option>
+                <option value="Excel">Excel</option>
+                <option value="Others">Others</option>
+            </select>
+
+            <label style="margin-top: 0.5rem;">Did You Answer? *</label>
+            <select name="answered" required>
+                <option value="">Select Answer Status</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <button type="button" class="btn-remove" onclick="removeQuestion(this)">Remove</button>
+        `;
+        container.appendChild(questionDiv);
+        questionCount++;
+    }
+
+    function removeQuestion(btn) {
+        const container = document.getElementById('questionsContainer');
+        if (container.children.length > 1) {
+            btn.parentElement.remove();
+        } else {
+            alert('You must have at least one question');
+        }
+    }
+
+    document.getElementById('addQuestionBtn').addEventListener('click', addQuestion);
+
+    document.getElementById('interviewForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById('interviewForm'));
+
+        try {
+            const response = await fetch('{{ url_for("submit_interview") }}', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showAlert('Interview submitted successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '{{ url_for("question_bank") }}';
+                }, 1500);
+            } else {
+                showAlert('Error submitting interview', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('An error occurred', 'error');
+        }
+    });
+</script>
+{% endblock %}

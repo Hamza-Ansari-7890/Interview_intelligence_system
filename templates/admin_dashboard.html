@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Interview Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>👨‍💼 Admin Dashboard</h2>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_users }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_submissions }}</div>
+        <div class="stat-label">Interview Submissions</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_questions }}</div>
+        <div class="stat-label">Total Questions</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📊 Recent Submissions</h3>
+
+    {% if recent_submissions %}
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission in recent_submissions %}
+            <tr>
+                <td>{{ submission[1] }}</td>
+                <td>{{ submission[2] }}</td>
+                <td>{{ submission[3] }}</td>
+                <td>{{ submission[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; color: #7f8c8d; padding: 2rem;">No submissions yet</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>⚙️ Admin Actions</h3>
+    <ul style="list-style: none;">
+        <li style="padding: 0.75rem 0; border-bottom: 1px solid #ecf0f1;">
+            <a href="{{ url_for('dashboard') }}" style="color: #667eea; text-decoration: none;">← Back to Dashboard</a>
+        </li>
+        <li style="padding: 0.75rem 0; border-bottom: 1px solid #ecf0f1;">
+            <a href="{{ url_for('admin_bulk_update') }}" style="color: #667eea; text-decoration: none;">📁 Bulk Update
+                Users (CSV)</a>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

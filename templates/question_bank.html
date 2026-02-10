@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Question Bank - Interview Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    .question-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 4px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 1rem;
+    }
+
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+
+    .company-tag {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+    }
+
+    .role-tag {
+        display: inline-block;
+        background: #764ba2;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+    }
+
+    .topic-tag {
+        display: inline-block;
+        background: #ecf0f1;
+        color: #2d3436;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .answered {
+        color: #27ae60;
+        font-weight: 600;
+    }
+
+    .not-answered {
+        color: #e74c3c;
+        font-weight: 600;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>📚 Question Bank</h2>
+
+<div class="filter-section">
+    <form method="get" action="{{ url_for('question_bank') }}">
+        <div class="filter-group">
+            <div>
+                <label for="filterTopic">Filter by Topic</label>
+                <input type="text" id="filterTopic" name="topic" value="{{ filters.topic }}"
+                    placeholder="Search topics...">
+            </div>
+            <div>
+                <label for="filterCompany">Filter by Company</label>
+                <input type="text" id="filterCompany" name="company" value="{{ filters.company }}"
+                    placeholder="Search companies...">
+            </div>
+            <div>
+                <label for="filterRole">Filter by Role</label>
+                <input type="text" id="filterRole" name="role" value="{{ filters.role }}" placeholder="Search roles...">
+            </div>
+            <div>
+                <label for="filterAnswered">Answered</label>
+                <select id="filterAnswered" name="answered">
+                    <option value="" {% if filters.answered=='' %}selected{% endif %}>Any</option>
+                    <option value="Yes" {% if filters.answered=='Yes' %}selected{% endif %}>Yes</option>
+                    <option value="No" {% if filters.answered=='No' %}selected{% endif %}>No</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; display:flex; gap:0.5rem;">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('question_bank') }}" class="btn btn-secondary">Clear</a>
+        </div>
+    </form>
+</div>
+
+{% if questions %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3>Total Questions: {{ questions|length }}</h3>
+        <a href="{{ url_for('submit_interview') }}" class="btn btn-primary">+ New Interview</a>
+    </div>
+
+    <div id="questionsContainer">
+        {% for question in questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <div>
+                    <span class="company-tag">Company: {{ question[4] }}</span>
+                    <span class="role-tag">Role: {{ question[5] }}</span>
+                </div>
+                <span class="{% if question[3] == 'Yes' %}answered{% else %}not-answered{% endif %}">
+                    Status: {{ question[3] }}
+                </span>
+            </div>
+
+            <div style="margin: 1rem 0;">
+                <p style="font-weight: 600; margin-bottom: 0.5rem;">Question:</p>
+                <p style="color: #2d3436; line-height: 1.6;">{{ question[1] }}</p>
+            </div>
+
+            <div>
+                <p style="font-weight: 600; margin-bottom: 0.5rem;">Topic:</p>
+                <span class="topic-tag">{{ question[2] }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <h3 style="color: #7f8c8d; margin-bottom: 1rem;">No questions yet</h3>
+    <p style="color: #95a5a6; margin-bottom: 1.5rem;">Start by submitting your first interview</p>
+    <a href="{{ url_for('submit_interview') }}" class="btn btn-primary">Submit Interview</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const filterTopic = document.getElementById('filterTopic');
+    const filterCompany = document.getElementById('filterCompany');
+    const questionsContainer = document.getElementById('questionsContainer');
+
+    function filterQuestions() {
+        const topicFilter = filterTopic.value.toLowerCase();
+        const companyFilter = filterCompany.value.toLowerCase();
+
+        const questionCards = questionsContainer.querySelectorAll('.question-card');
+
+        questionCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const matches = (!topicFilter || text.includes(topicFilter)) &&
+                (!companyFilter || text.includes(companyFilter));
+
+            card.style.display = matches ? 'block' : 'none';
+        });
+    }
+
+    filterTopic?.addEventListener('keyup', filterQuestions);
+    filterCompany?.addEventListener('keyup', filterQuestions);
+</script>
+{% endblock %}

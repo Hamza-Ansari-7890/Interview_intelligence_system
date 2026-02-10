@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Bulk Update - Interview Intelligence{% endblock %}
+
+{% block content %}
+<h2>📁 Bulk Update Users</h2>
+
+<div class="card">
+    <p>Upload a CSV with headers: <strong>email, role, batch, password</strong>. The import will update existing users
+        (by email) or create new ones.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file">CSV File *</label>
+        <input type="file" name="file" id="file" accept=".csv" required>
+        <br><br>
+        <button type="submit" class="btn btn-primary">Upload & Apply</button>
+    </form>
+</div>
+
+{% if result is not none %}
+<div class="card">
+    <h3>Result</h3>
+    <p>Created: <strong>{{ result.created }}</strong></p>
+    <p>Updated: <strong>{{ result.updated }}</strong></p>
+
+    {% if result.errors %}
+    <div style="margin-top:1rem;">
+        <h4>Errors</h4>
+        <ul>
+            {% for err in result.errors %}
+            <li style="color: #e74c3c;">{{ err }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
