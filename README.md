@@ -42,118 +42,58 @@ A modern Flask-based interview preparation and analytics platform.
    ```
 
 ## Running the Application
+# Interview Intelligence System
 
-```bash
-python app.py
-```
+A Flask-based interview preparation and analytics app. This README provides safe, minimal setup instructions and an overview — no sensitive information is included here.
 
-The application will start on `http://localhost:5000`
+## Quick Start
 
-## Default Login Credentials
+1. Clone or open this repository and create a Python virtual environment (recommended).
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Copy `.env.example` to `.env` and provide your own values for secrets and the database connection. Do NOT commit `.env` to source control.
+4. Run the application:
+   ```bash
+   python app.py
+   ```
 
-- **Username**: boss
-- **Password**: @Hamza1234
-- **Role**: admin
+## Environment
 
-⚠️ **Change these credentials in production!**
+- Place runtime configuration in a `.env` file. This file should contain at least `DATABASE_URL` and `SECRET_KEY`.
+- Example entries are intentionally omitted for security. Use secure, unique values in production.
 
-## Project Structure
+## Project Layout
 
-```
-interview_intelligence_app/
-├── app.py                 # Main Flask application
-├── config.py              # Database configuration
-├── requirements.txt       # Project dependencies
-├── database/
-│   ├── init_db.py        # Database initialization
-│   ├── db.py             # Database connection utilities
-│   └── models.sql        # SQL schema definitions
-├── templates/            # HTML templates for Flask
-│   ├── base.html         # Base template
-│   ├── login.html        # Login page
-│   ├── dashboard.html    # Main dashboard
-│   ├── submit_interview.html
-│   ├── question_bank.html
-│   ├── admin_dashboard.html
-│   └── error pages
-```
+Key files and folders:
+
+- `app.py` — Flask application entrypoint and routes
+- `config.py` — Database connection loader
+- `database/` — DB initialization and schema utilities
+- `templates/` — HTML templates used by Flask
+- `utils/` — helper modules
 
 ## Database
 
-The application uses PostgreSQL (as configured in `config.py`)
+The application expects a PostgreSQL database available via the `DATABASE_URL` environment variable. Run migrations or schema creation only if you control the target database.
 
-### Tables
+## Security Notes
 
-- **users**: User accounts with roles (admin/student)
-- **interview_submissions**: Interview records with company, role, round, mode
-- **questions**: Interview questions linked to submissions
-
-## Key Improvements Over Streamlit Version
-
-✅ **Framework**: Flask instead of Streamlit - more control and customization
-✅ **Templates**: Proper HTML/CSS templates instead of script-based UI
-✅ **Performance**: Optimized database queries
-✅ **API Endpoints**: RESTful API endpoints for data access
-✅ **Session Management**: Secure server-side session handling
-✅ **Responsive Design**: Mobile-friendly UI
-✅ **Better UX**: Professional interface with proper form validation
-
-## API Endpoints
-
-- `POST /login` - User authentication
-- `GET/POST /submit-interview` - Submit interview details
-- `GET /question-bank` - View questions by user
-- `GET /api/submissions` - Get user submissions (JSON)
-- `GET /api/questions/<submission_id>` - Get questions for a submission
-
-## Development
-
-Debug mode is enabled when `FLASK_ENV=development` is set.
-
-```bash
-# With debug/watch mode
-python app.py
-```
-
-## Production Deployment
-
-1. Set `FLASK_ENV=production`
-2. Use a production WSGI server like Gunicorn:
-   ```bash
-   pip install gunicorn
-   gunicorn -w 4 app:app
-   ```
-3. Use environment variables for sensitive data
-4. Set up a reverse proxy (nginx) if needed
-
-## Database Initialization
-
-The database is automatically initialized when the app starts via `init_db()`. 
-
-To reinitialize (WARNING: This deletes all data):
-```python
-from database.init_db import init_db
-init_db()
-```
+- Never store plaintext secrets or passwords in the repository.
+- Use strong `SECRET_KEY` values for session security.
+- Consider enabling password hashing (e.g., `bcrypt`) for user passwords.
 
 ## Troubleshooting
 
-**DATABASE_URL not found error:**
-- Ensure `.env` file exists in project root
-- Check that `DATABASE_URL` is properly set
+- If the app fails to connect, check that `DATABASE_URL` in your `.env` is correct and that the database service is reachable from this host.
+- For local testing, ensure your virtual environment has the same Python version used in development.
 
-**Port 5000 already in use:**
-```bash
-# Use a different port
-python -c "import os; os.environ['FLASK_PORT']='5001'; exec(open('app.py').read())"
-```
+## Contributing
 
-**PostgreSQL connection errors:**
-- Ensure PostgreSQL server is running
-- Verify connection string format: `postgresql://user:password@host:port/database`
+If you want to contribute, open a PR with focused changes and avoid including any secrets or credentials.
 
-## License
+---
 
-This project is part of the Interview Intelligence System.
-
-For questions or issues, please contact the development team.
+For more detailed developer notes, consult the repository code and existing comments. If you'd like, I can add a secure admin-seeding mechanism that reads admin credentials from environment variables instead of hardcoding them in the codebase.
+✅ **Framework**: Flask instead of Streamlit - more control and customization
