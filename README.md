@@ -68,11 +68,6 @@ interview_intelligence_app/
 │   ├── init_db.py        # Database initialization
 │   ├── db.py             # Database connection utilities
 │   └── models.sql        # SQL schema definitions
-├── pages/                 # Legacy Streamlit pages (deprecated)
-├── utils/
-│   ├── auth_utils.py     # Authentication utilities
-│   ├── tagging.py        # Question tagging utilities
-│   └── duplicate.py      # Duplicate detection utilities
 ├── templates/            # HTML templates for Flask
 │   ├── base.html         # Base template
 │   ├── login.html        # Login page
@@ -81,7 +76,6 @@ interview_intelligence_app/
 │   ├── question_bank.html
 │   ├── admin_dashboard.html
 │   └── error pages
-└── data/                 # SQLite database (if using SQLite)
 ```
 
 ## Database
