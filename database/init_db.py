@@ -18,12 +18,7 @@ def init_db():
         registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
-    # Ensure a default admin exists (idempotent)
-    cur.execute("""
-    INSERT INTO users (username, password, role, email, batch)
-    VALUES ('boss', '@Hamza1234', 'admin', 'hamzaansari@acciojob.com', 'master')
-    ON CONFLICT (email) DO NOTHING;
-    """)
+
     cur.execute("""
     CREATE TABLE IF NOT EXISTS interview_submissions (
     id SERIAL PRIMARY KEY,
